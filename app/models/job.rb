@@ -6,4 +6,6 @@ class Job < ActiveRecord::Base
   validates :sez, presence: true, :numericality => { :greater_than => 0}
 
   has_many :consumptions
+  has_many :relations, foreign_key: "job_id"
+  has_many :relations, foreign_key: "successor_id"
 end

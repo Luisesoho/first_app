@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140303174817) do
+ActiveRecord::Schema.define(:version => 20140303211811) do
 
   create_table "consumptions", :force => true do |t|
     t.integer  "job_id"
@@ -30,6 +30,13 @@ ActiveRecord::Schema.define(:version => 20140303174817) do
     t.integer  "end"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "relations", :force => true do |t|
+    t.integer  "job_id"
+    t.integer  "successor_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "resources", :force => true do |t|

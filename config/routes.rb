@@ -4,6 +4,7 @@ SampleApp::Application.routes.draw do
   resources :jobs
   resources :resources
   resources :consumptions
+  resources :relations
 
   root to: 'static_pages#home'
 
