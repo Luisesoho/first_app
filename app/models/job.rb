@@ -4,4 +4,6 @@ class Job < ActiveRecord::Base
   validates :name, presence: true, length: {maximum: 20},  uniqueness: { case_sensitive: false }
   validates :fez, presence: true, :numericality => { :greater_than => 0}
   validates :sez, presence: true, :numericality => { :greater_than => 0}
+
+  has_many :consumptions
 end
