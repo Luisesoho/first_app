@@ -22,4 +22,13 @@
 <br/>
 
 <%= link_to 'Create a new Relation', new_relation_path %><br> <br>
-<%= link_to  'Go back to main menu', current_user %>
+
+<div class="navigation-left" style="float:left">
+  &lArr;  <%= link_to 'Go Back to Jobs', jobs_path %>  </div>
+<div class="navigation-left" style="float:right">
+  <%= link_to 'Continue with Consumptions', consumptions_path %>     &#8658;    </div>
+<br>
+<div class="navigation-left" style="float:left">
+  &lArr; <%= link_to  'Go to Main menu', current_user %>    </div><br>
+<div class="nagigation-left" style="float:left">
+  &lArr; <%= link_to  'Go to Update menu', current_user %>    </div>

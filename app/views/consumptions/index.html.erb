@@ -24,5 +24,11 @@
 <br/>
 
 <%= link_to 'Create a new Consumption', new_consumption_path %><br> <br>
-<%= link_to  'Go back to main menu', current_user %>
-<%= link_to 'Continue with Relations', relations_path %>
+
+<div class="navigation-left" style="float:left">
+  &lArr;  <%= link_to 'Go Back to Relations', relations_path %>  </div>
+<br>
+<div class="navigation-left" style="float:left">
+  &lArr; <%= link_to  'Go to Main menu', current_user %>    </div><br>
+<div class="nagigation-left" style="float:left">
+  &lArr; <%= link_to  'Go to Update menu', current_user %>    </div>

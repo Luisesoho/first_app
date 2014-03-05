@@ -6,6 +6,7 @@ set j /
 Q 
 j10
 j11
+j12
 S 
 /; 
 
@@ -16,6 +17,8 @@ VN('Q','j10')=yes;
 VN('j10','S')=yes;
 VN('Q','j11')=yes;
 VN('j11','S')=yes;
+VN('Q','j12')=yes;
+VN('j12','S')=yes;
 
 VN('j10','j11')=yes; 
 
@@ -25,18 +28,21 @@ Q   0
 S   0
 j10   4
 j11   4
+j12   3
 /
 FEZ(j) /
 Q   0
 S   0
 j10   4
 j11   8
+j12   3
 /
 SEZ(j) /
 Q   0
 S   20
 j10   4
 j11   8
+j12   6
 /
 Kap(r) /
 r10   10
