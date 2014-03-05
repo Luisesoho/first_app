@@ -1,18 +1,18 @@
 
---- Job RCPSP.gms Start 03/04/14 18:53:43 24.1.3 r41464 WEX-WEI x86_64/MS Windows
+--- Job RCPSP_Modell.gms Start 03/05/14 13:25:02 24.1.3 r41464 WEX-WEI x86_64/MS Windows
 GAMS 24.1.3   Copyright (C) 1987-2013 GAMS Development. All rights reserved
 Licensee: Kurslizenz                                     S130222/0001AN-GEN
           Leibniz University Hannover, Lehrstuhl fuer ProduktionswirtDC6657
           License for teaching and research at degree granting institutions
 --- Starting compilation
---- RCPSP.gms(26) 2 Mb
---- .inputfile.inc(52) 3 Mb
---- RCPSP.gms(61) 3 Mb
+--- RCPSP_Modell.gms(26) 2 Mb
+--- .inputfile.inc(46) 3 Mb
+--- RCPSP_Modell.gms(75) 3 Mb
 --- Starting execution: elapsed 0:00:00.004
---- RCPSP.gms(108) 4 Mb
+--- RCPSP_Modell.gms(102) 4 Mb
 --- Generating MIP model RCPSP
---- RCPSP.gms(110) 4 Mb
----   31 rows  47 columns  196 non-zeroes
+--- RCPSP_Modell.gms(104) 4 Mb
+---   31 rows  47 columns  179 non-zeroes
 ---   46 discrete-columns
 --- Executing CPLEX: elapsed 0:00:00.012
 
@@ -23,40 +23,41 @@ Reading data...
 Starting Cplex...
 Tried aggregator 2 times.
 MIP Presolve eliminated 28 rows and 44 columns.
-MIP Presolve modified 33 coefficients.
+MIP Presolve modified 37 coefficients.
 Aggregator did 3 substitutions.
 All rows and columns eliminated.
-Presolve time = 0.00 sec. (0.12 ticks)
+Presolve time = 0.00 sec. (0.10 ticks)
 
 Root node processing (before b&c):
-  Real time             =    0.00 sec. (0.12 ticks)
+  Real time             =    0.00 sec. (0.11 ticks)
 Sequential b&c:
   Real time             =    0.00 sec. (0.00 ticks)
                           ------------
-Total (root+branch&cut) =    0.00 sec. (0.12 ticks)
+Total (root+branch&cut) =    0.00 sec. (0.11 ticks)
 MIP status(101): integer optimal solution
-Cplex Time: 0.00sec (det. 0.12 ticks)
+Cplex Time: 0.00sec (det. 0.11 ticks)
 Fixing integer variables, and solving final LP...
 Tried aggregator 1 time.
 LP Presolve eliminated 31 rows and 47 columns.
 All rows and columns eliminated.
-Presolve time = 0.00 sec. (0.02 ticks)
+Presolve time = 0.00 sec. (0.01 ticks)
 Fixed MIP status(1): optimal
 Cplex Time: 0.00sec (det. 0.03 ticks)
 
 Proven optimal solution.
 
-MIP Solution:           10.000000    (0 iterations, 0 nodes)
-Final Solve:            10.000000    (0 iterations)
+MIP Solution:            8.000000    (0 iterations, 0 nodes)
+Final Solve:             8.000000    (0 iterations)
 
-Best possible:          10.000000
+Best possible:           8.000000
 Absolute gap:            0.000000
 Relative gap:            0.000000
 
 --- Restarting execution
---- RCPSP.gms(110) 2 Mb
+--- RCPSP_Modell.gms(104) 2 Mb
 --- Reading solution for model RCPSP
---- Executing after solve: elapsed 0:00:00.206
---- RCPSP.gms(112) 3 Mb
+--- Executing after solve: elapsed 0:00:00.106
+--- RCPSP_Modell.gms(121) 3 Mb
+--- Putfile Outputfile C:\Sites\RCPSP_App\Outputfile.txt
 *** Status: Normal completion
---- Job RCPSP.gms Stop 03/04/14 18:53:43 elapsed 0:00:00.207
+--- Job RCPSP_Modell.gms Stop 03/05/14 13:25:02 elapsed 0:00:00.107

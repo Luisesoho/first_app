@@ -73,13 +73,13 @@ class JobsController < ApplicationController
 
     printf(f, "set r / \n")
     @resources = Resource.all
-    @resources.each { |res| printf(f, res.name + "\n") }
+    @resources.each { |res| printf(f, "r" + res.id.to_s + "\n") }
     printf(f, "/; \n\n")
 
     printf(f, "set j / \n")
     printf(f, "Q \n")
     @jobs = Job.all
-    @jobs.each { |jo| printf(f, jo.name + "\n" ) }
+    @jobs.each { |jo| printf(f, "j"+jo.id.to_s + "\n" ) }
     printf(f, "S \n")
     printf(f, "/; \n\n")
 
@@ -87,13 +87,13 @@ class JobsController < ApplicationController
 
     printf(f, "VN(h,j)=no; \n")
     @jobs.each do |jo|
-      printf(f, "VN('Q','" + jo.name + "')=yes;\n")
-      printf(f, "VN('" + jo.name + "','S')=yes;\n" )
+      printf(f, "VN('Q','j" + jo.id.to_s + "')=yes;\n")
+      printf(f, "VN('j" + jo.id.to_s + "','S')=yes;\n" )
     end
     printf(f, "\n")
 
     @relations = Relation.all
-    @relations.each { |rel| printf(f, "VN('"+ rel.job.name + "','" + rel.successor.name + "')=yes; \n") }
+    @relations.each { |rel| printf(f, "VN('j"+ rel.job.id.to_s + "','j" + rel.successor.id.to_s + "')=yes; \n") }
     printf(f, "\n")
 
     printf(f, "parameter \n")
@@ -101,37 +101,80 @@ class JobsController < ApplicationController
     printf(f, "Q   0\n")
     printf(f, "S   0\n")
     @jobs = Job.all
-    @jobs.each { |jo| printf(f, jo.name + "   " + jo.duration.to_s + "\n") }
+    @jobs.each { |jo| printf(f, "j"+jo.id.to_s + "   " + jo.duration.to_s + "\n") }
     printf(f, "/\n")
 
     printf(f, "FEZ(j) /\n")
     printf(f, "Q   0\n")
-    printf(f, "S   20\n")
+    printf(f, "S   0\n")
     @jobs = Job.all
-    @jobs.each {|jo| printf(f, jo.name + "   " + jo.fez.to_s + "\n" ) }
+    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.fez.to_s + "\n" ) }
     printf(f, "/\n")
 
     printf(f, "SEZ(j) /\n")
     printf(f, "Q   0\n")
     printf(f, "S   20\n")
     @jobs = Job.all
-    @jobs.each {|jo| printf(f, jo.name + "   " + jo.sez.to_s + "\n" ) }
+    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.sez.to_s + "\n" ) }
     printf(f, "/\n")
 
     printf(f, "Kap(r) /\n")
-    @resources.each { |res| printf(f, res.name+ "   " + res.capacity.to_s + "\n" ) }
+    @resources.each { |res| printf(f, "r"+res.id.to_s+ "   " + res.capacity.to_s + "\n" ) }
     printf(f, "/;\n\n")
 
 
     printf(f, "k(j,r)=0;\n")
     @consumptions = Consumption.all
-    @consumptions.each { |con| printf(f,"k('"+con.job.name+"','" + con.resource.name + "')=" + con.consumption.to_s+";\n")}
+    @consumptions.each { |con| printf(f,"k('j"+con.job.id.to_s+"','r" + con.resource.id.to_s + "')=" + con.consumption.to_s+";\n")}
     f.close
 
+    if File.exist?("Outputfile.txt")
+      File.delete("Outputfile.txt")
+    end
 
+    system "C:\\GAMS\\win64\\24.1\\gams RCPSP_Modell"
+    if File.exists?("Outputfile.txt")
+      flash[:success] = "Optimization done!"
+    else
+      flash[:error] = "Optimization failed"
+    end
 
-    redirect_to jobs_path
+    redirect_to current_user
   end
+
+
+  def read_solution
+
+    if File.exist?("Outputfile.txt")
+      fi=File.open("Outputfile.txt", "r")
+      line=fi.readline
+      sa=line.split(" ")
+      @objective_function_value=sa[1]
+      fi.each { |line|
+        sa=line.split(";")
+        sa0=sa[0].delete "j "
+#        sa1=sa[1].delete "t "
+        sa1=sa[1].delete " \n"
+        al=Job.find_by_id(sa0)
+        al.end=sa1.to_i-1
+        al.begin=sa1.to_i-1-al.duration
+        al.save
+      }
+      fi.close
+      @jobs = Job.all
+      render "jobs/index"
+
+    else
+      flash.now[:not_available] = "Problem not solved!"
+      @jobs = Job.all
+      redirect_to jobs_url
+     end
+  end
+
+
+
+
+
 
   private
 

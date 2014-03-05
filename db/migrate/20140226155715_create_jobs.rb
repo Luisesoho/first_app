@@ -7,7 +7,6 @@ class CreateJobs < ActiveRecord::Migration
       t.integer :sez
       t.integer :begin
       t.integer :end
-
       t.timestamps
     end
   end

@@ -1,5 +1,10 @@
 <% provide(:title, 'All jobs') %>
 <h1>Jobs</h1>
+
+<% if @objective_function_value!=nil %>
+    Objective function value: <b><%=   @objective_function_value %></b><br>   <br>   <br>
+<% end %>
+
 <table class="table" id="jobs">
   <tr>
     <th>Name</th>

@@ -59,3 +59,23 @@ solve RCPSP minimizing z using mip;
 
 display x.l
 
+loop(t,
+ x.l('Q',t)=0;
+ x.l('S',t)=0;
+);
+
+file Outputfile / 'Outputfile.txt'/;
+put Outputfile;
+
+put 'Zielfunktionswert:  ',z.l /
+
+loop(j,
+     loop(t,
+         if(x.l(j,t)=1,
+             put j.tl:0, ' ; ' ord(t):0 /
+         );
+     );
+);
+
+putclose outputfile;
+

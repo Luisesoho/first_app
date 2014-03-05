@@ -1,52 +1,46 @@
-set r /
-Paolo
-Carolina
-Luise
-Martin
-/;
+set r / 
+r10
+/; 
 
-set j /
-Q
-kochen
-Backen
-S
-/;
+set j / 
+Q 
+j10
+j11
+S 
+/; 
 
-set t /t0*t20/;
+set t /t0*t20/; 
 
-VN(h,j)=no;
-VN('Q','kochen')=yes;
-VN('kochen','S')=yes;
-VN('Q','Backen')=yes;
-VN('Backen','S')=yes;
+VN(h,j)=no; 
+VN('Q','j10')=yes;
+VN('j10','S')=yes;
+VN('Q','j11')=yes;
+VN('j11','S')=yes;
 
-VN('kochen','Backen')=yes;
+VN('j10','j11')=yes; 
 
-parameter
-d(j) /
+parameter 
+d(j) / 
 Q   0
 S   0
-kochen   5
-Backen   5
+j10   4
+j11   4
 /
 FEZ(j) /
 Q   0
 S   0
-kochen   5
-Backen   10
+j10   4
+j11   8
 /
 SEZ(j) /
 Q   0
 S   20
-kochen   5
-Backen   10
+j10   4
+j11   8
 /
 Kap(r) /
-Paolo   5
-Carolina   5
-Luise   5
-Martin   5
+r10   10
 /;
 
 k(j,r)=0;
-k('kochen','Paolo')=2;
+k('j10','r10')=1;

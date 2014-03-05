@@ -1,0 +1,3 @@
+Zielfunktionswert:          8.00
+j10 ; 5.00
+j11 ; 9.00
