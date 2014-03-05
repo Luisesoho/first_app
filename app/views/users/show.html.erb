@@ -11,13 +11,11 @@
 </div>
 
 <% if signed_in? %>
-    <p>
-      &#9829 YOUR PROJECT &#9829     <br>      <br>
-      <%= link_to "Update Jobs!", jobs_path %>    <br>
-      <%= link_to "Update Resources!", resources_path %>    <br>
-      <%= link_to "Update Consumptions!", consumptions_path %>    <br>
-      <%= link_to "Update Relations!", relations_path %>    <br>
 
-
+    <p >
+      <%= button_to "Update Project", :controller => 'users', :action => 'update_project' %>
+      <%= button_to "New Project", :controller => 'resources', :action => 'new_project' %>
+      <%= button_to "Delete Solution", :controller => 'jobs', :action => 'delete_solution' %>
+      <%= button_to "Solve Problem", :controller => 'jobs', :action => 'solve_problem' %>
     </p>
 <% end %>

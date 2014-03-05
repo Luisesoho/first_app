@@ -47,6 +47,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_project
+    render 'update'
+  end
+
   private
 
   def signed_in_user

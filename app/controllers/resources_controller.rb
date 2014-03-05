@@ -45,6 +45,11 @@ class ResourcesController < ApplicationController
     end
   end
 
+  def new_project
+    system "rake db:reset_data"
+    flash[:success] = "Data destroyed!"
+    redirect_to resources_path
+  end
 
   private
 
