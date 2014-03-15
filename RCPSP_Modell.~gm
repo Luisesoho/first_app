@@ -72,7 +72,7 @@ put 'Zielfunktionswert:  ',z.l /
 loop(j,
      loop(t,
          if(x.l(j,t)=1,
-             put j.tl:0, ' ; ' ord(t-1):0 /
+             put j.tl:0, ' ; ' ord(t):0 /
          );
      );
 );

@@ -23,6 +23,7 @@ SampleApp::Application.routes.draw do
   match 'jobs/delete_solution', :to => 'jobs#delete_solution'
   match 'jobs/solve_problem', :to => 'jobs#solve_problem'
   match 'jobs/read_solution', :to => 'jobs#read_solution'
+  match 'jobs/load_project', :to => 'jobs#load_project'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -171,6 +171,13 @@ class JobsController < ApplicationController
      end
   end
 
+  def load_project
+    system "rake db:reset_data"
+    system "rake db:sample_project"
+    flash[:success] = "Sample Project loaded!"
+    redirect_to current_user
+  end
+
 
 
 
