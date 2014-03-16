@@ -27,25 +27,25 @@ free variables
 $include inputfile.inc
 
 *        BERECHNUNGEN    *
-FEZ(j)=0;
-SEZ(j)=0;
-FEZ('Q')=0;
+*FEZ(j)=0;
+*SEZ(j)=0;
+*FEZ('Q')=0;
 
-loop(j$(ord(j)>=2),
-    FEZ(j)=smax(h$(VN(h,j)),FEZ(h))+d(j);
-);
+*loop(j$(ord(j)>=2),
+*    FEZ(j)=smax(h$(VN(h,j)),FEZ(h))+d(j);
+*);
 
 
-SEZ('S')=50;
+*SEZ('S')=50;
 
-alias (h,ri);
-set revi(h,ri);
-revi(h,h+[card(h)-2*ord(h)+1]) = yes;
+*alias (h,ri);
+*set revi(h,ri);
+*revi(h,h+[card(h)-2*ord(h)+1]) = yes;
 
-loop (revi(h,ri)$(ord(h)>1),
- SEZ(ri)=smin(j$(VN(ri,j)),(SEZ(j)-d(j)));
+*loop (revi(h,ri)$(ord(h)>1),
+* SEZ(ri)=smin(j$(VN(ri,j)),(SEZ(j)-d(j)));
 * SSZ(ri)=SEZ(ri)-d(ri);
-);
+*);
 
 
 Equations

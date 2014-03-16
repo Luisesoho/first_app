@@ -49,21 +49,38 @@ class JobsController < ApplicationController
    def calc_fezsez
     @jobs = Job.all
     @jobs.each { |jo|
-      jo.fez=jo.duration
-      @relations = Relation.all
+     jo.fez=jo.duration
+     @relations = Relation.all
       @relations.each{|re|
         if jo.id == re.successor_id
-          jo.fez=0.0
+          if jo.fez < re.job.fez+jo.duration
+          jo.fez=re.job.fez+jo.duration
+         end
         end
-        if jo.fez == 0
-          jo.fez == 2
+      }
+     jo.save
+    }
+
+    @jobs = Job.all
+    @jobs.reverse_each { |jo|
+      jo.sez=jo.fez
+      @relations = Relation.all
+      @relations.each{|re|
+        if jo.id == re.job_id
+          jo.sez = 0
         end
+        if jo.id == re.job_id
+          if jo.sez < re.successor.sez-re.successor.duration
+            jo.sez=re.successor.sez-re.successor.duration
+          end
+        end
+      }
       jo.save
     }
-    }
-    flash[:success] = "FEZ and SEZ calculated!"
+
+    flash[:success]="FEZ and SEZ calculated!"
     redirect_to jobs_path
-    end
+end
 
   def delete_solution
 

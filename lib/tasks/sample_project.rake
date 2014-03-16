@@ -6,10 +6,10 @@ namespace :db do
     J3 = Job.create!(name: "Mock-Ups erstellen", duration: 3)
     J4 = Job.create!(name: "Modell in GAMS implementieren", duration: 2)
     J5 = Job.create!(name: "Layout in RoR anpassen", duration: 3)
-    J6 = Job.create!(name: "Datenbanken ertellen", duration: 4)
+    J6 = Job.create!(name: "Datenbanken erstellen", duration: 4)
     J7 = Job.create!(name: "Datenbanken verknuepfen", duration: 6)
     J8 = Job.create!(name: "RoR und GAMS verknuepfen", duration: 8)
-    J9 = Job.create!(name: "Nuterfreundlichkeit verbessern", duration:3)
+    J9 = Job.create!(name: "Nutzerfreundlichkeit verbessern", duration:3)
     J10 = Job.create!(name: "Hausarbeit schreiben", duration: 15)
 
     R1 = Resource.create!(name: "Arbeitskraft", capacity: 9)
