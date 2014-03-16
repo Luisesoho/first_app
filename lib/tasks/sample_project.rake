@@ -37,16 +37,5 @@ namespace :db do
     RE10 = Relation.create!(job_id: J8.id, successor_id: J9.id)
     RE11 = Relation.create!(job_id: J9.id, successor_id: J10.id)
 
-
-
-
-
-
-
-
-
-
-
-
   end
 end

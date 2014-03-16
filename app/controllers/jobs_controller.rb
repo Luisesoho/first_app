@@ -46,6 +46,25 @@ class JobsController < ApplicationController
     redirect_to jobs_path
   end
 
+   def calc_fezsez
+    @jobs = Job.all
+    @jobs.each { |jo|
+      jo.fez=jo.duration
+      @relations = Relation.all
+      @relations.each{|re|
+        if jo.id == re.successor_id
+          jo.fez=0.0
+        end
+        if jo.fez == 0
+          jo.fez == 2
+        end
+      jo.save
+    }
+    }
+    flash[:success] = "FEZ and SEZ calculated!"
+    redirect_to jobs_path
+    end
+
   def delete_solution
 
     if File.exists?("Outputfile.txt")
@@ -83,7 +102,7 @@ class JobsController < ApplicationController
     printf(f, "S \n")
     printf(f, "/; \n\n")
 
-    printf(f, "set t /t0*t20/; \n\n")
+    printf(f, "set t /t0*t50/; \n\n")
 
     printf(f, "VN(h,j)=no; \n")
     @jobs.each do |jo|
@@ -102,20 +121,6 @@ class JobsController < ApplicationController
     printf(f, "S   0\n")
     @jobs = Job.all
     @jobs.each { |jo| printf(f, "j"+jo.id.to_s + "   " + jo.duration.to_s + "\n") }
-    printf(f, "/\n")
-
-    printf(f, "FEZ(j) /\n")
-    printf(f, "Q   0\n")
-    printf(f, "S   0\n")
-    @jobs = Job.all
-    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.fez.to_s + "\n" ) }
-    printf(f, "/\n")
-
-    printf(f, "SEZ(j) /\n")
-    printf(f, "Q   0\n")
-    printf(f, "S   20\n")
-    @jobs = Job.all
-    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.sez.to_s + "\n" ) }
     printf(f, "/\n")
 
     printf(f, "Kap(r) /\n")
@@ -177,10 +182,6 @@ class JobsController < ApplicationController
     flash[:success] = "Sample Project loaded!"
     redirect_to current_user
   end
-
-
-
-
 
 
   private
