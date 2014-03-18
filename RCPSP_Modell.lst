@@ -1,0 +1,391 @@
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  set
+   2    j Arbeitsgang
+   3    t Periode
+   4    r Ressource;
+   5   
+   6  alias(t,q);
+   7  alias(h,j);
+   8   
+   9  set
+  10    VN(h,j) Vorgänger-Nachfolger-Relation zwischen h und j;
+  11   
+  12  parameter
+  13    d(j)    Dauer des Arbeitsgangs j
+  14    FEZ(j)  fruehestmoeglicher Endtermin des Arbeitsgangs j
+  15    k(j,r)  Kapazitaetsbedarf des Arbeitsgangs j bezueglich der Ressource r je Periode
+  16    Kap(r)  Periodenkapazitaet der Ressource r
+  17    SEZ(j)  spaetestzulaessiger Endtermin des Arbeitsgangs j   ;
+  18   
+  19  binary variables
+  20   
+  21    x(j,t)  nimmt den Wert 1 an wenn der Arbeitsgang j in Periode t beendet wird und 0 sonst;
+  22   
+  23  free variables
+  24    z       Zielfunktionswert;
+  25   
+INCLUDE    C:\Sites\RCPSP_App\inputfile.inc
+  27  set r /
+  28  r2
+  29  /;
+  30   
+  31  set j /
+  32  Q
+  33  j5
+  34  j6
+  35  j7
+  36  j8
+  37  j9
+  38  j10
+  39  j11
+  40  j12
+  41  j13
+  42  j14
+  43  S
+  44  /;
+  45   
+  46  set t /t0*t50/;
+  47   
+  48  VN(h,j)=no;
+  49  VN('Q','j5')=yes;
+  50  VN('j5','S')=yes;
+  51  VN('Q','j6')=yes;
+  52  VN('j6','S')=yes;
+  53  VN('Q','j7')=yes;
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  54  VN('j7','S')=yes;
+  55  VN('Q','j8')=yes;
+  56  VN('j8','S')=yes;
+  57  VN('Q','j9')=yes;
+  58  VN('j9','S')=yes;
+  59  VN('Q','j10')=yes;
+  60  VN('j10','S')=yes;
+  61  VN('Q','j11')=yes;
+  62  VN('j11','S')=yes;
+  63  VN('Q','j12')=yes;
+  64  VN('j12','S')=yes;
+  65  VN('Q','j13')=yes;
+  66  VN('j13','S')=yes;
+  67  VN('Q','j14')=yes;
+  68  VN('j14','S')=yes;
+  69   
+  70  VN('j5','j6')=yes;
+  71  VN('j6','j7')=yes;
+  72  VN('j6','j8')=yes;
+  73  VN('j7','j9')=yes;
+  74  VN('j7','j10')=yes;
+  75  VN('j8','j12')=yes;
+  76  VN('j9','j13')=yes;
+  77  VN('j10','j11')=yes;
+  78  VN('j11','j12')=yes;
+  79  VN('j12','j13')=yes;
+  80  VN('j13','j14')=yes;
+  81   
+  82  parameter
+  83  d(j) /
+  84  Q   0
+  85  S   0
+  86  j5   1
+  87  j6   2
+  88  j7   3
+  89  j8   2
+  90  j9   3
+  91  j10   4
+  92  j11   6
+  93  j12   8
+  94  j13   3
+  95  j14   15
+  96  /
+  97  FEZ(j) /
+  98  Q   0
+  99  S   0
+ 100  j5   1
+ 101  j6   3
+ 102  j7   6
+ 103  j8   5
+ 104  j9   9
+ 105  j10   10
+ 106  j11   16
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 107  j12   24
+ 108  j13   27
+ 109  j14   42
+ 110  /
+ 111  SEZ(j) /
+ 112  Q   0
+ 113  S   50
+ 114  j5   1
+ 115  j6   3
+ 116  j7   6
+ 117  j8   16
+ 118  j9   24
+ 119  j10   10
+ 120  j11   16
+ 121  j12   24
+ 122  j13   27
+ 123  j14   50
+ 124  /
+ 125  Kap(r) /
+ 126  r2   9
+ 127  /;
+ 128   
+ 129  k(j,r)=0;
+ 130  k('j5','r2')=8;
+ 131  k('j6','r2')=8;
+ 132  k('j7','r2')=5;
+ 133  k('j8','r2')=4;
+ 134  k('j9','r2')=4;
+ 135  k('j10','r2')=8;
+ 136  k('j11','r2')=7;
+ 137  k('j12','r2')=6;
+ 138  k('j13','r2')=5;
+ 139  k('j14','r2')=8;
+ 140   
+ 141   
+ 142  Equations
+ 143      Zielfunktion
+ 144      JederVorgangEinmal(j)
+ 145      Projektstruktur(h,j)
+ 146      Kapazitaetsrestriktion(r,t);
+ 147   
+ 148  Zielfunktion..
+ 149      z=e=sum(j$(ord(j)=card(J)),sum(t$(FEZ(j)<=ord(t)-1 and ord(t)-1 <= SEZ(j)), (ord(t)-1)*x(j,t)));
+ 150   
+ 151  JederVorgangEinmal(j)..
+ 152      sum(t$(FEZ(j)<=ord(t)-1 and ord(t)-1 <= SEZ(j)), x(j,t)) =e= 1;
+ 153   
+ 154  Projektstruktur(h,j)$VN(h,j)..
+ 155      sum(t$(FEZ(h)<=ord(t)-1 and ord(t)-1 <= SEZ(h)), (ord(t)-1)*x(h,t))  =l=
+ 156      sum(t$(FEZ(j)<=ord(t)-1 and ord(t)-1 <= SEZ(j)), (ord(t)-1-d(j))*x(j,t));
+ 157   
+ 158  Kapazitaetsrestriktion(r,t)..
+ 159      sum(j,k(j,r)*sum(q$(ord(q)-1>=ord(t)-1 and ord(q)-1<=ord(t)-1+d(j)-1),x(j,q)))=l=Kap(r);
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 160   
+ 161  model RCPSP /
+ 162      Zielfunktion
+ 163      JederVorgangEinmal
+ 164      Projektstruktur
+ 165      Kapazitaetsrestriktion
+ 166      /;
+ 167   
+ 168  *Liefertermin muss verschoben werden, sonst keine zulaessige Loesung
+ 169  SEZ(j)=SEZ(j)+1;
+ 170   
+ 171  solve RCPSP minimizing z using mip;
+ 172   
+ 173  display x.l
+ 174   
+ 175  loop(t,
+ 176   x.l('Q',t)=0;
+ 177   x.l('S',t)=0;
+ 178  );
+ 179   
+ 180  file Outputfile / 'Outputfile.txt'/;
+ 181  put Outputfile;
+ 182   
+ 183  put 'Zielfunktionswert:  ',z.l /
+ 184   
+ 185  loop(j,
+ 186       loop(t,
+ 187           if(x.l(j,t)=1,
+ 188               put j.tl:0, ' ; ' ord(t):0 /
+ 189           );
+ 190       );
+ 191  );
+ 192   
+ 193  putclose outputfile;
+ 194   
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Sites\RCPSP_App\RCPSP_Modell.gms
+     2       26 INCLUDE        1      26  .C:\Sites\RCPSP_App\inputfile.inc
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  24.1.3 r41464 WEX-WEI
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE RCPSP Using MIP From line 171
+
+
+---- Zielfunktion  =E=  
+
+Zielfunktion..  - x(S,t1) - 2*x(S,t2) - 3*x(S,t3) - 4*x(S,t4) - 5*x(S,t5) - 6*x(S,t6) - 7*x(S,t7) - 8*x(S,t8) - 9*x(S,t9) - 10*x(S,t10) - 11*x(S,t11) - 12*x(S,t12) - 13*x(S,t13) - 14*x(S,t14) - 15*x(S,t15) - 16*x(S,t16) - 17*x(S,t17) - 18*x(S,t18)
+     
+      - 19*x(S,t19) - 20*x(S,t20) - 21*x(S,t21) - 22*x(S,t22) - 23*x(S,t23) - 24*x(S,t24) - 25*x(S,t25) - 26*x(S,t26) - 27*x(S,t27) - 28*x(S,t28) - 29*x(S,t29) - 30*x(S,t30) - 31*x(S,t31) - 32*x(S,t32) - 33*x(S,t33) - 34*x(S,t34) - 35*x(S,t35)
+     
+      - 36*x(S,t36) - 37*x(S,t37) - 38*x(S,t38) - 39*x(S,t39) - 40*x(S,t40) - 41*x(S,t41) - 42*x(S,t42) - 43*x(S,t43) - 44*x(S,t44) - 45*x(S,t45) - 46*x(S,t46) - 47*x(S,t47) - 48*x(S,t48) - 49*x(S,t49) - 50*x(S,t50) + z =E= 0 ; (LHS = 0)
+     
+
+---- JederVorgangEinmal  =E=  
+
+JederVorgangEinmal(Q)..  x(Q,t0) + x(Q,t1) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+JederVorgangEinmal(j5)..  x(j5,t1) + x(j5,t2) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+JederVorgangEinmal(j6)..  x(j6,t3) + x(j6,t4) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+REMAINING 9 ENTRIES SKIPPED
+
+
+---- Projektstruktur  =L=  
+
+Projektstruktur(Q,j5)..  x(Q,t1) - x(j5,t2) =L= 0 ; (LHS = 0)
+     
+Projektstruktur(Q,j6)..  x(Q,t1) - x(j6,t3) - 2*x(j6,t4) =L= 0 ; (LHS = 0)
+     
+Projektstruktur(Q,j7)..  x(Q,t1) - 3*x(j7,t6) - 4*x(j7,t7) =L= 0 ; (LHS = 0)
+     
+REMAINING 28 ENTRIES SKIPPED
+
+
+---- Kapazitaetsrestriktion  =L=  
+
+Kapazitaetsrestriktion(r2,t0)..  8*x(j5,t0) + 8*x(j6,t0) + 8*x(j6,t1) + 5*x(j7,t0) + 5*x(j7,t1) + 5*x(j7,t2) + 4*x(j8,t0) + 4*x(j8,t1) + 4*x(j9,t0) + 4*x(j9,t1) + 4*x(j9,t2) + 8*x(j10,t0) + 8*x(j10,t1) + 8*x(j10,t2) + 8*x(j10,t3) + 7*x(j11,t0)
+     
+      + 7*x(j11,t1) + 7*x(j11,t2) + 7*x(j11,t3) + 7*x(j11,t4) + 7*x(j11,t5) + 6*x(j12,t0) + 6*x(j12,t1) + 6*x(j12,t2) + 6*x(j12,t3) + 6*x(j12,t4) + 6*x(j12,t5) + 6*x(j12,t6) + 6*x(j12,t7) + 5*x(j13,t0) + 5*x(j13,t1) + 5*x(j13,t2) + 8*x(j14,t0)
+     
+      + 8*x(j14,t1) + 8*x(j14,t2) + 8*x(j14,t3) + 8*x(j14,t4) + 8*x(j14,t5) + 8*x(j14,t6) + 8*x(j14,t7) + 8*x(j14,t8) + 8*x(j14,t9) + 8*x(j14,t10) + 8*x(j14,t11) + 8*x(j14,t12) + 8*x(j14,t13) + 8*x(j14,t14) =L= 9 ; (LHS = 0)
+     
+Kapazitaetsrestriktion(r2,t1)..  8*x(j5,t1) + 8*x(j6,t1) + 8*x(j6,t2) + 5*x(j7,t1) + 5*x(j7,t2) + 5*x(j7,t3) + 4*x(j8,t1) + 4*x(j8,t2) + 4*x(j9,t1) + 4*x(j9,t2) + 4*x(j9,t3) + 8*x(j10,t1) + 8*x(j10,t2) + 8*x(j10,t3) + 8*x(j10,t4) + 7*x(j11,t1)
+     
+      + 7*x(j11,t2) + 7*x(j11,t3) + 7*x(j11,t4) + 7*x(j11,t5) + 7*x(j11,t6) + 6*x(j12,t1) + 6*x(j12,t2) + 6*x(j12,t3) + 6*x(j12,t4) + 6*x(j12,t5) + 6*x(j12,t6) + 6*x(j12,t7) + 6*x(j12,t8) + 5*x(j13,t1) + 5*x(j13,t2) + 5*x(j13,t3) + 8*x(j14,t1)
+     
+      + 8*x(j14,t2) + 8*x(j14,t3) + 8*x(j14,t4) + 8*x(j14,t5) + 8*x(j14,t6) + 8*x(j14,t7) + 8*x(j14,t8) + 8*x(j14,t9) + 8*x(j14,t10) + 8*x(j14,t11) + 8*x(j14,t12) + 8*x(j14,t13) + 8*x(j14,t14) + 8*x(j14,t15) =L= 9 ; (LHS = 0)
+     
+Kapazitaetsrestriktion(r2,t2)..  8*x(j5,t2) + 8*x(j6,t2) + 8*x(j6,t3) + 5*x(j7,t2) + 5*x(j7,t3) + 5*x(j7,t4) + 4*x(j8,t2) + 4*x(j8,t3) + 4*x(j9,t2) + 4*x(j9,t3) + 4*x(j9,t4) + 8*x(j10,t2) + 8*x(j10,t3) + 8*x(j10,t4) + 8*x(j10,t5) + 7*x(j11,t2)
+     
+      + 7*x(j11,t3) + 7*x(j11,t4) + 7*x(j11,t5) + 7*x(j11,t6) + 7*x(j11,t7) + 6*x(j12,t2) + 6*x(j12,t3) + 6*x(j12,t4) + 6*x(j12,t5) + 6*x(j12,t6) + 6*x(j12,t7) + 6*x(j12,t8) + 6*x(j12,t9) + 5*x(j13,t2) + 5*x(j13,t3) + 5*x(j13,t4) + 8*x(j14,t2)
+     
+      + 8*x(j14,t3) + 8*x(j14,t4) + 8*x(j14,t5) + 8*x(j14,t6) + 8*x(j14,t7) + 8*x(j14,t8) + 8*x(j14,t9) + 8*x(j14,t10) + 8*x(j14,t11) + 8*x(j14,t12) + 8*x(j14,t13) + 8*x(j14,t14) + 8*x(j14,t15) + 8*x(j14,t16) =L= 9 ; (LHS = 0)
+     
+REMAINING 48 ENTRIES SKIPPED
+
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE RCPSP Using MIP From line 171
+
+
+---- x  nimmt den Wert 1 an wenn der Arbeitsgang j in Periode t beendet wird und 0 sonst
+
+x(Q,t0)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       JederVorgangEinmal(Q)
+
+x(Q,t1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       JederVorgangEinmal(Q)
+        1       Projektstruktur(Q,j5)
+        1       Projektstruktur(Q,j6)
+        1       Projektstruktur(Q,j7)
+        1       Projektstruktur(Q,j8)
+        1       Projektstruktur(Q,j9)
+        1       Projektstruktur(Q,j10)
+        1       Projektstruktur(Q,j11)
+        1       Projektstruktur(Q,j12)
+        1       Projektstruktur(Q,j13)
+        1       Projektstruktur(Q,j14)
+
+x(j5,t0)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        8       Kapazitaetsrestriktion(r2,t0)
+
+REMAINING 560 ENTRIES SKIPPED
+
+---- z  Zielfunktionswert
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       Zielfunktion
+
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE RCPSP Using MIP From line 171
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS           95
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES          564
+NON ZERO ELEMENTS         3,107     DISCRETE VARIABLES        563
+
+
+GENERATION TIME      =        0.032 SECONDS      4 MB  24.1.3 r41464 WEX-WEI
+
+
+EXECUTION TIME       =        0.032 SECONDS      4 MB  24.1.3 r41464 WEX-WEI
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                    03/17/14 20:31:28 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE RCPSP Using MIP From line 171
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   RCPSP               OBJECTIVE  z
+     TYPE    MIP                 DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  171
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      10 Integer Infeasible       
+**** OBJECTIVE VALUE               NA
+
+ RESOURCE USAGE, LIMIT          0.016      1000.000
+ ITERATION COUNT, LIMIT         0    2000000000
+
+IBM ILOG CPLEX   24.1.3 r41464 Released Jul 26, 2013 WEI x86_64/MS Windows    
+--- GAMS/Cplex licensed for continuous and discrete problems.
+Cplex 12.5.1.0
+
+MIP status(103): integer infeasible
+Cplex Time: 0.00sec (det. 1.84 ticks)
+Problem is integer infeasible.
+
+No solution returned
+GAMS 24.1.3  r41464 Released Jul 26, 2013 WEX-WEI x86_64/MS Windows                                                                                                                                                                   03/17/14 20:31:28 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    173 VARIABLE x.L  nimmt den Wert 1 an wenn der Arbeitsgang j in Periode t beendet wird und 0 sonst
+
+                      ( ALL       0.000 )
+
+
+**** REPORT FILE SUMMARY
+
+Outputfile C:\Sites\RCPSP_App\Outputfile.txt
+
+
+EXECUTION TIME       =        0.000 SECONDS      3 MB  24.1.3 r41464 WEX-WEI
+
+
+USER: Kurslizenz                                     S130222/0001AN-GEN
+      Leibniz University Hannover, Lehrstuhl fuer ProduktionswirtDC6657
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Sites\RCPSP_App\RCPSP_Modell.gms
+Output     C:\Sites\RCPSP_App\RCPSP_Modell.lst

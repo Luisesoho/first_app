@@ -14,8 +14,7 @@ parameter
   FEZ(j)  fruehestmoeglicher Endtermin des Arbeitsgangs j
   k(j,r)  Kapazitaetsbedarf des Arbeitsgangs j bezueglich der Ressource r je Periode
   Kap(r)  Periodenkapazitaet der Ressource r
-  SEZ(j)  spaetestzulaessiger Endtermin des Arbeitsgangs j
-  SSZ(j);
+  SEZ(j)  spaetestzulaessiger Endtermin des Arbeitsgangs j   ;
 
 binary variables
 
@@ -25,27 +24,6 @@ free variables
   z       Zielfunktionswert;
 
 $include inputfile.inc
-
-*        BERECHNUNGEN    *
-*FEZ(j)=0;
-*SEZ(j)=0;
-*FEZ('Q')=0;
-
-*loop(j$(ord(j)>=2),
-*    FEZ(j)=smax(h$(VN(h,j)),FEZ(h))+d(j);
-*);
-
-
-*SEZ('S')=50;
-
-*alias (h,ri);
-*set revi(h,ri);
-*revi(h,h+[card(h)-2*ord(h)+1]) = yes;
-
-*loop (revi(h,ri)$(ord(h)>1),
-* SEZ(ri)=smin(j$(VN(ri,j)),(SEZ(j)-d(j)));
-* SSZ(ri)=SEZ(ri)-d(ri);
-*);
 
 
 Equations
@@ -79,7 +57,7 @@ SEZ(j)=SEZ(j)+1;
 
 solve RCPSP minimizing z using mip;
 
-display x.l, FEZ, SEZ;
+display x.l
 
 loop(t,
  x.l('Q',t)=0;

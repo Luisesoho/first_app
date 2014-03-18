@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20140303211811) do
     t.integer  "sez"
     t.integer  "begin"
     t.integer  "end"
+    t.integer  "ssz"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

@@ -62,21 +62,54 @@ class JobsController < ApplicationController
     }
 
     @jobs = Job.all
-    @jobs.reverse_each { |jo|
-      jo.sez=jo.fez
-      @relations = Relation.all
-      @relations.each{|re|
-        if jo.id == re.job_id
-          jo.sez = 0
-        end
-        if jo.id == re.job_id
-          if jo.sez < re.successor.sez-re.successor.duration
-            jo.sez=re.successor.sez-re.successor.duration
+    @jobs.each { |jo|
+    jo.sez = 50
+    jo.ssz = jo.sez
+        @relations = Relation.all
+        @relations.each{|re|
+          if jo.id == re.job_id then
+           jo.sez = 50
+           jo.ssz = 50
           end
-        end
-      }
+        }
+    jo.save
+    }
+
+    @jobs = Job.all
+    @jobs.reverse_each { |jo|
+        @relations = Relation.all
+        @relations.each{|re|
+          if jo.id == re.job_id
+            if re.successor.ssz < jo.sez
+              jo.sez = re.successor.ssz
+            end
+          end
+        jo.ssz = jo.fez - jo.duration
+        }
       jo.save
     }
+
+    #@jobs = Job.all
+    #@jobs.reverse_each { |jo|
+    #  jo.sez=jo.fez
+    #  @relations = Relation.all
+    #  @relations.each{|re|
+    #    if jo.id == re.job_id then
+    #      jo.sez = 0
+    #    end
+    #    jo.ssz=jo.sez-jo.duration
+    #    if jo.id == re.job_id
+    #      jo.ssz = jo.sez-jo.duration
+    #      jo.sez = re.successor.ssz
+    #    end
+    #    #       if jo.id == re.job_id
+ #  #       if jo.sez < re.successor.sez-re.successor.duration
+ #  #         jo.sez=re.successor.sez-re.successor.duration
+ #  #       end
+ #  #    end
+    #  }
+    #  jo.save
+    #}
 
     flash[:success]="FEZ and SEZ calculated!"
     redirect_to jobs_path
@@ -140,10 +173,23 @@ end
     @jobs.each { |jo| printf(f, "j"+jo.id.to_s + "   " + jo.duration.to_s + "\n") }
     printf(f, "/\n")
 
+    printf(f, "FEZ(j) /\n")
+    printf(f, "Q   0\n")
+    printf(f, "S   0\n")
+    @jobs = Job.all
+    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.fez.to_s + "\n" ) }
+    printf(f, "/\n")
+
+    printf(f, "SEZ(j) /\n")
+    printf(f, "Q   0\n")
+    printf(f, "S   50\n")
+    @jobs = Job.all
+    @jobs.each {|jo| printf(f, "j"+jo.id.to_s + "   " + jo.sez.to_s + "\n" ) }
+    printf(f, "/\n")
+
     printf(f, "Kap(r) /\n")
     @resources.each { |res| printf(f, "r"+res.id.to_s+ "   " + res.capacity.to_s + "\n" ) }
     printf(f, "/;\n\n")
-
 
     printf(f, "k(j,r)=0;\n")
     @consumptions = Consumption.all
